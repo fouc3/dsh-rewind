@@ -24,6 +24,8 @@ DSH（[DeepSeek Harness](https://github.com/deepseek-ai)）会话回退插件。
   - 事件流读取：优先官方 `snapshotEvents()` / `eventAt()`，旧宿主自动回退 `session.events`；
   - 聊天隐藏改为**纯 DOM 实现**（经插槽 props 给行打 seq 戳 + MutationObserver 驱动），不再依赖宿主 store 内部形状（`s.chat.*` 随版本漂移正是 v2.1.1 在 rc.1 上失效的根因）；
   - 修复：composer 插槽无 `props.useSession` 导致「取消回溯」按钮整体崩溃、提交后横幅不消失。
+  - 修复：dsh ≥0.1.5-rc 移除 `UiPrimitives.MessageText`（仅剩 `MarkdownText`）导致用户消息渲染崩溃——双轨回退 `MessageText || MarkdownText`。
+  - 轨迹同步：聊天隐藏的同一隐藏集合也作用于**轨迹页**——回退 mark/commit 后，轨迹表格按 `data-trajectory-row-key` 反解事件 seq，隐藏目标行及之后/已提交区间的记录；取消回溯自动恢复。
 - 调试日志默认关闭；设环境变量 `XSJ_REWIND_DEBUG=/path/to/file` 后，服务端会话解析与处理器异常会落盘到该文件。
 - 旧版（≤2.1.1）在 dsh ≥0.1.2-rc.1 上的已知症状：mark 请求 404、消息不隐藏、无取消按钮、横幅不消失——请升级到 ≥2.1.2。
 
